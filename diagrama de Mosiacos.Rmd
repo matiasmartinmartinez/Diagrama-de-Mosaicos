@@ -1,0 +1,130 @@
+---
+title: "Diagrama de Mosaicos"
+author: "Matías Martínez"
+date: "4 de mayo de 2018"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Mosaicos
+
+
+En clases anteriores observamos el gráfico de barras fraccionado por una variable de interés. Al profundizar, apreciamos que es de mayor beneficio una visualización que utiliza frecuencias relativas en constraste de una con frecuencias absolutas.
+
+```{r,echo=FALSE,message=FALSE}
+library(tidyverse)
+library("productplots")
+```
+
+
+##Diagrama en frecuencias absolutas.
+```{r,echo=TRUE}
+happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)%>% group_by(marital,happy) %>% summarise(cont=n()) %>% drop_na() %>%
+     ggplot( aes( x=marital, y=cont,colour= happy, fill=happy)) + 
+  geom_bar(stat="identity") +
+  labs( x="Estado civil", y ="Porcentaje", title="Gráfico de mosaicos: Porcentaje niveles de felicidad según estado civil") +
+  theme_minimal( base_size=11) +
+  theme( plot.title = element_text( hjust = 0.5, colour="darkslategrey", size=13.7, face="plain")) +
+  scale_fill_manual( values=c("firebrick3","seagreen3","royalblue4"))
+```
+
+##Diagrama en frecuencias relativas.
+```{r,echo=TRUE}
+happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)%>% group_by(marital,happy) %>% summarise(cont=n()) %>% drop_na() %>%
+     ggplot( aes( x=marital, y=cont,colour= happy, fill=happy)) + 
+  geom_bar(stat="identity",position ="fill") +
+  labs( x="Estado civil", y ="Porcentaje", title="Gráfico de mosaicos: Porcentaje niveles de felicidad según estado civil") +
+  theme_minimal( base_size=11) +
+  theme( plot.title = element_text( hjust = 0.5, colour="darkslategrey", size=13.7, face="plain")) +
+  scale_fill_manual( values=c("firebrick3","seagreen3","royalblue4"))
+```
+
+
+## Notamos que la interpretacon varia en funcion de qué frecuencia usemos.
+
+Entonces, utilizar frecuencias relativas nos generaba tranquilidad de momento. Simplemente utilizábamos el gráfico de barras fraccionado por frecuencias relativas (con un 100% para cada barra) y la comparación eras más acorde.
+ 
+Pero se nos plantea una problemática: pese a que esta visualización nos muestra claramente la distribución de nuestra variable *y* (por ejemplo los niveles de felicidad), asume que todos los niveles de nuestra variable *x* poseen la misma cantidad de observaciones.
+
+
+##Inusual 
+
+Es inusual en el análisis de datos que cada nivel de una variable posea la misma frecuencia absoluta. Sin ir más lejos, para el ejemplo de felicidad según estado civil:
+
+
+```{r,echo=FALSE}
+library(knitr)
+happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)%>% group_by(marital) %>% summarise(cont=n()) %>% mutate(percent=round((cont/sum(cont)*100),2)) %>% drop_na() %>% kable()
+```
+
+##Nuestro gráfico no expresa esta diferencia. 
+
+Por lo cual sería necesario representar visualmente cuantas observaciones toman los casados, los solteros, etc. O sea, necesitamos **"algo"** que nos muestre las diferrencias en las observaciones para cada nivel de *x*.
+
+Obsérvese como con una simple modificación podemos solucionar este inconveniente: representando en el ancho de las barras la frecuencia relativa de observaciones para cada nivel.
+
+
+## 
+Esta modificación es implementada en el denominado **diagrama de mosaicos** y consiste en representar graficamente una tabla bidimensional o multidimensional para variables cualitativas.
+
+```{r,message=FALSE}
+library("ggmosaic")
+```
+
+```{r,echo = FALSE}
+happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)%>% group_by(marital,happy) %>% summarise(cont=n()) %>% drop_na() %>%
+     ggplot() +
+  geom_mosaic(aes( weight=cont, x=product(happy,marital), colour=happy, fill=happy)) +
+  labs( x="Estado civil", y="Porcentaje", title="Gráfico de mosaicos: Porcentaje niveles de felicidad según estado civil") +
+  theme_minimal( base_size=11) +
+  guides( fill=guide_legend(title = "Felicidad", reverse = TRUE)) + scale_x_productlist( labels=labels) +
+  theme( plot.title = element_text( hjust = 0.5, colour="darkslategrey", size=13.7, face="plain")) +
+  guides( fill=guide_legend( title="Felicidad")) +
+  scale_fill_manual( values=c("firebrick3","seagreen3","royalblue4"))
+```
+
+##
+Nótese que cierta disposición nos resulta familiar: el diagrama de mosaicos no es más que una visualización de tablas de contingencia expresada en frecuencias relativas.
+
+```{r}
+```
+
+## Información Probabilística
+
+Una bondad importante de este diagrama es su aporte probabilísticio, dado que el área de cada mosaico corresponde a la probabilidad condicionada (cumplen A nivel de *y* dado que cumplen B nivel de *x*). 
+
+- Ejemplo: ¿Cuál es la probabilidad de ser muy feliz dado que estoy casado?
+- Estará dada de multiplicar la probabilidad de estar casado por la probabiilidad de ser muy feliz.
+ 
+## Repaso histórico
+ 
+Los diagramas de mosaicos fueron introduciods por Hartigan y Kleiner en 1981 y ampliado por Friendly en 1994. También se denominan gráficos Mekko debido a su parecido con un grabado de Marimekko(empresa finlandesa de muebles para el hogar, textiles y moda con sede en Helsinki).
+
+## **Propiedades**
+
+- La trama es de al menos dos variables. No hay límite superior, pero demasiadas variables pueden ser confusas en forma gráfica.
+- Pueden ser dificiles de interpretar, sobre todo con una gran cantidad de niveles.
+- Dificil hacer comparaciones con precisión entre cada segmento.
+- A diferencia de, por ejemplo, el diagrama de caja, no es posible que el gráfico de mosaico trace un intervalo de confianza. Por lo tanto, la importancia de las diferentes frecuencias de los diversos valores característicos no se puede observar visualmente.
+- Pueden ser dificiles de interpretar, sobre todo con una gran cantidad de niveles.
+
+
+
+## ¿Cómo generar un diagrama de mosaico en R?
+
+```{r,eval=FALSE}
+
+library(ggmosaic)
+
+mpg %>% group_by(x=class, y=drv) %>% summarise(peso=n()) %>%
++ ggplot() + geom_mosaic(aes( weight=peso, x=product(y,x), colour=y, fill=y))
+```
+
+No es necesario darle las frecuencias relativas, con**weight** = contador es suficiente.
+
+
+
+
