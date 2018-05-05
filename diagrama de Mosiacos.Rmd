@@ -62,7 +62,7 @@ happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)
 
 ##Nuestro gráfico no expresa esta diferencia. 
 
-Por lo cual sería necesario representar visualmente cuantas observaciones toman los casados, los solteros, etc. O sea, necesitamos **"algo"** que nos muestre las diferrencias en las observaciones para cada nivel de *x*.
+Por lo cual sería necesario representar visualmente cuantas observaciones toman los casados, los solteros, etc. O sea, necesitamos **"algo"** que nos muestre las diferencias en las observaciones para cada nivel de *x*.
 
 Obsérvese como con una simple modificación podemos solucionar este inconveniente: representando en el ancho de las barras la frecuencia relativa de observaciones para cada nivel.
 
@@ -118,12 +118,11 @@ Los diagramas de mosaicos fueron introduciods por Hartigan y Kleiner en 1981 y a
 ```{r,eval=FALSE}
 
 library(ggmosaic)
-
 mpg %>% group_by(x=class, y=drv) %>% summarise(peso=n()) %>%
 + ggplot() + geom_mosaic(aes( weight=peso, x=product(y,x), colour=y, fill=y))
 ```
 
-No es necesario darle las frecuencias relativas, con**weight** = contador es suficiente.
+No es necesario darle las frecuencias relativas, con **weight** = contador (frecuencias absolutas) es suficiente.
 
 
 
