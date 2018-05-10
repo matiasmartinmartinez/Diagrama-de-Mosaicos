@@ -1,7 +1,7 @@
 ---
 title: "Diagrama de Mosaicos"
 author: "Matías Martínez"
-date: "4 de mayo de 2018"
+date: "21 de mayo de 2018"
 output: ioslides_presentation
 ---
 
@@ -109,7 +109,7 @@ Una bondad importante de este diagrama es su aporte probabilísticio, dado que e
  
 Los diagramas de mosaicos fueron introduciods por Hartigan y Kleiner en 1981 y ampliado por Friendly en 1994. También se denominan gráficos Mekko debido a su parecido con un grabado de Marimekko(empresa finlandesa de muebles para el hogar, textiles y moda con sede en Helsinki).
 
-## **Propiedades**
+## **Características**
 
 - La trama es de al menos dos variables. No hay límite superior, pero demasiadas variables pueden ser confusas en forma gráfica.
 
@@ -124,15 +124,21 @@ Los diagramas de mosaicos fueron introduciods por Hartigan y Kleiner en 1981 y a
 ## ¿Cómo generar un diagrama de mosaico en R?
 
 ```{r,echo=TRUE}
-
 library(ggmosaic)
- mpg %>% group_by(x=year, y=drv) %>% summarise(peso=n()) %>%
-   ggplot() + geom_mosaic(aes( weight=peso, x=product(y,x),color=y,fill=y))
+data=as.data.frame.table(apply(Titanic, c(1, 4), sum))
+data
 ```
+##  
+
+```{r,echo=TRUE}
+data %>% ggplot() + geom_mosaic(aes( weight=Freq, x=product(Survived,Class),color=Survived,fill=Survived))
+```
+
+##
 
 No es necesario darle las frecuencias relativas, con **weight** = contador (frecuencias absolutas) es suficiente.
 
-usamos product(y,x) 
+Usamos product(y,x) 
 
 
 
