@@ -9,7 +9,7 @@ output: ioslides_presentation
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Mosaicos
+## Conocimientos previos
 
 
 En clases anteriores observamos el gráfico de barras fraccionado por una variable de interés. Al profundizar, apreciamos que es de mayor beneficio una visualización que utiliza frecuencias relativas en constraste de una con frecuencias absolutas.
@@ -138,7 +138,7 @@ data %>% ggplot() + geom_mosaic(aes( weight=Freq, x=product(Survived,Class),colo
 
 No es necesario darle las frecuencias relativas, con **weight** = contador (frecuencias absolutas) es suficiente.
 
-Usamos product(y,x) 
+Usamos product(y,x). Permite generar una **lista** dentro de nuestra *x*.
 
 
 
