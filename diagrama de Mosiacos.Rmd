@@ -21,7 +21,7 @@ library("productplots")
 
 
 ##Diagrama en frecuencias absolutas.
-```{r,echo=TRUE}
+```{r,echo=F}
 happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)%>% group_by(marital,happy) %>% summarise(cont=n()) %>% drop_na() %>%
      ggplot( aes( x=marital, y=cont,colour= happy, fill=happy)) + 
   geom_bar(stat="identity") +
@@ -32,7 +32,7 @@ happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)
 ```
 
 ##Diagrama en frecuencias relativas.
-```{r,echo=TRUE}
+```{r,echo=F}
 happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)%>% group_by(marital,happy) %>% summarise(cont=n()) %>% drop_na() %>%
      ggplot( aes( x=marital, y=cont,colour= happy, fill=happy)) + 
   geom_bar(stat="identity",position ="fill") +
@@ -89,7 +89,8 @@ happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)
 ##
 Nótese que cierta disposición nos resulta familiar: el diagrama de mosaicos no es más que una visualización de tablas de contingencia expresada en frecuencias relativas.
 
-```{r}
+```{r,echo=F}
+happy %>% drop_na() %>% group_by(marital,happy) %>% arrange(marital)%>% summarise(cont=n()) %>%  arrange(marital) %>% mutate(percent=round((cont/sum(cont)*100),1)) %>% select(-(cont)) %>% spread(marital,percent) %>% kable
 ```
 
 ## Información Probabilística
@@ -106,23 +107,27 @@ Los diagramas de mosaicos fueron introduciods por Hartigan y Kleiner en 1981 y a
 ## **Propiedades**
 
 - La trama es de al menos dos variables. No hay límite superior, pero demasiadas variables pueden ser confusas en forma gráfica.
+
 - Pueden ser dificiles de interpretar, sobre todo con una gran cantidad de niveles.
+
 - Dificil hacer comparaciones con precisión entre cada segmento.
-- A diferencia de, por ejemplo, el diagrama de caja, no es posible que el gráfico de mosaico trace un intervalo de confianza. Por lo tanto, la importancia de las diferentes frecuencias de los diversos valores característicos no se puede observar visualmente.
-- Pueden ser dificiles de interpretar, sobre todo con una gran cantidad de niveles.
+
+- A diferencia de, por ejemplo, el diagrama de caja, no es posible que el gráfico de mosaico trace un interválo de confianza.
 
 
 
 ## ¿Cómo generar un diagrama de mosaico en R?
 
-```{r,eval=FALSE}
+```{r,echo=TRUE}
 
 library(ggmosaic)
-mpg %>% group_by(x=class, y=drv) %>% summarise(peso=n()) %>%
-+ ggplot() + geom_mosaic(aes( weight=peso, x=product(y,x), colour=y, fill=y))
+ mpg %>% group_by(x=year, y=drv) %>% summarise(peso=n()) %>%
+   ggplot() + geom_mosaic(aes( weight=peso, x=product(y,x),color=y,fill=y))
 ```
 
 No es necesario darle las frecuencias relativas, con **weight** = contador (frecuencias absolutas) es suficiente.
+
+usamos product(y,x) 
 
 
 
