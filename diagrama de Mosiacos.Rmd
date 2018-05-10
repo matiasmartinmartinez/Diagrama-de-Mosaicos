@@ -47,7 +47,7 @@ happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)
 
 Entonces, utilizar frecuencias relativas nos generaba tranquilidad de momento. Simplemente utilizábamos el gráfico de barras fraccionado por frecuencias relativas (con un 100% para cada barra) y la comparación eras más acorde.
  
-Pero se nos plantea una problemática: pese a que esta visualización nos muestra claramente la distribución de nuestra variable *y* (por ejemplo los niveles de felicidad), asume que todos los niveles de nuestra variable *x* poseen la misma cantidad de observaciones.
+Pero se nos plantea una problemática: pese a que esta visualización nos muestra claramente la distribución de nuestra variable **y** (por ejemplo los niveles de felicidad), asume que todos los niveles de nuestra variable **x** poseen la misma cantidad de observaciones.
 
 
 ##Inusual 
@@ -68,7 +68,7 @@ Obsérvese como con una simple modificación podemos solucionar este inconvenien
 
 
 ## 
-Esta modificación es implementada en el denominado **diagrama de mosaicos** y consiste en representar graficamente una tabla bidimensional o multidimensional para variables cualitativas.
+Esta modificación es implementada en el denominado **diagrama de mosaicos** y consiste en representar gráficamente una tabla bidimensional o multidimensional para variables cualitativas.
 
 ```{r,message=FALSE}
 library("ggmosaic")
@@ -90,7 +90,7 @@ happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)
 Nótese que cierta disposición nos resulta familiar: el diagrama de mosaicos no es más que una visualización de tablas de contingencia expresada en frecuencias relativas.
 
 ```{r,echo=F}
-happy %>% drop_na() %>% group_by(marital,happy) %>% arrange(marital)%>% summarise(cont=n()) %>%  arrange(marital) %>% mutate(percent=round((cont/sum(cont)*100),1)) %>% select(-(cont)) %>% spread(marital,percent) %>% kable
+happy %>% drop_na() %>% count(marital,happy) %>% spread(marital,n) %>% kable
 ```
 
 ## Información Probabilística
@@ -98,7 +98,12 @@ happy %>% drop_na() %>% group_by(marital,happy) %>% arrange(marital)%>% summaris
 Una bondad importante de este diagrama es su aporte probabilísticio, dado que el área de cada mosaico corresponde a la probabilidad condicionada (cumplen A nivel de *y* dado que cumplen B nivel de *x*). 
 
 - Ejemplo: ¿Cuál es la probabilidad de ser muy feliz dado que estoy casado?
-- Estará dada de multiplicar la probabilidad de estar casado por la probabiilidad de ser muy feliz.
+- Estará dada de multiplicar la probabilidad de estar casado por la probabilidad de ser muy feliz, y dividirlo entre la probabilidad de ser muy feliz.
+
+```{r,echo=FALSE}
+((round(prop.table(table(happy$marital)),2)[1]*round(prop.table(table(happy$happy)),2)[3])/round(prop.table(table(happy$marital)),2)[1])%>% kable
+```
+
  
 ## Repaso histórico
  
