@@ -87,10 +87,10 @@ happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)
 ```
 
 ##
-Nótese que cierta disposición nos resulta familiar: el diagrama de mosaicos no es más que una visualización de tablas de contingencia expresada en frecuencias relativas.
+Nótese que cierta disposición nos resulta familiar: 
 
 ```{r,echo=F}
-happy %>% drop_na() %>% count(marital,happy) %>% spread(marital,n) %>% kable
+happy %>% drop_na() %>% group_by(marital,happy) %>% arrange(marital)%>% summarise(cont=n()) %>%  arrange(marital) %>% mutate(percent=round((cont/sum(cont)*100),1)) %>% select(-(cont)) %>% spread(marital,percent) %>% kable
 ```
 
 ## Información Probabilística
@@ -98,16 +98,18 @@ happy %>% drop_na() %>% count(marital,happy) %>% spread(marital,n) %>% kable
 Una bondad importante de este diagrama es su aporte probabilísticio, dado que el área de cada mosaico corresponde a la probabilidad condicionada (cumplen A nivel de *y* dado que cumplen B nivel de *x*). 
 
 - Ejemplo: ¿Cuál es la probabilidad de ser muy feliz dado que estoy casado?
-- Estará dada de multiplicar la probabilidad de estar casado por la probabilidad de ser muy feliz, y dividirlo entre la probabilidad de ser muy feliz.
+- Estará dada de multiplicar la probabilidad de estar casado por la probabilidad de ser muy feliz (calcular el área de su mosaico).
+
 
 ```{r,echo=FALSE}
-((round(prop.table(table(happy$marital)),2)[1]*round(prop.table(table(happy$happy)),2)[3])/round(prop.table(table(happy$marital)),2)[1])%>% kable
+round(prop.table(table(happy$marital)),2)[1]*round(prop.table(table(happy$happy)),2)[3]
 ```
 
  
 ## Repaso histórico
  
-Los diagramas de mosaicos fueron introduciods por Hartigan y Kleiner en 1981 y ampliado por Friendly en 1994. También se denominan gráficos Mekko debido a su parecido con un grabado de Marimekko(empresa finlandesa de muebles para el hogar, textiles y moda con sede en Helsinki).
+Los diagramas de mosaicos fueron introduciods por Hartigan y Kleiner en 1981 y ampliado por Friendly en 1994. 
+También se denominan gráficos Mekko debido a su parecido con un grabado de Marimekko(empresa finlandesa de muebles para el hogar, textiles y moda con sede en Helsinki).
 
 ## **Características**
 
@@ -117,7 +119,7 @@ Los diagramas de mosaicos fueron introduciods por Hartigan y Kleiner en 1981 y a
 
 - Dificil hacer comparaciones con precisión entre cada segmento.
 
-- A diferencia de, por ejemplo, el diagrama de caja, no es posible que el gráfico de mosaico trace un interválo de confianza.
+- Ideal para exploración de datos con variables categóricas.
 
 
 
@@ -128,9 +130,11 @@ library(ggmosaic)
 data=as.data.frame.table(apply(Titanic, c(1, 4), sum))
 data
 ```
-##  
+##
 
-```{r,echo=TRUE}
+data  %>%  ggplot()  +  geom_mosaic ( aes ( **weight**=Freq,  x=**product(Survived,Class)**,color=Survived,fill=Survived))
+
+```{r,echo=FALSE}
 data %>% ggplot() + geom_mosaic(aes( weight=Freq, x=product(Survived,Class),color=Survived,fill=Survived))
 ```
 
@@ -138,8 +142,23 @@ data %>% ggplot() + geom_mosaic(aes( weight=Freq, x=product(Survived,Class),colo
 
 No es necesario darle las frecuencias relativas, con **weight** = contador (frecuencias absolutas) es suficiente.
 
-Usamos product(y,x). Permite generar una **lista de vectores** dentro de nuestra *x*, ya que geom_mosaic no posee un *Y*.
+Usamos product(y,x). Permite generar una **lista de vectores** dentro de nuestra *x*, ya que geom_mosaic no posee un *y*,*w*,*z*.
 
+## Aplicación en más de dos variables
+```{r,echo=TRUE}
+data=as.data.frame.table(apply(Titanic, c(2:4), sum))
+ ggplot(data) + 
+  geom_mosaic(aes(weight=Freq, x=product(Survived,Age,Sex),fill=Sex))
+```
 
+##
+
+```{r,echo=TRUE}
+ ggplot(data) + 
+   geom_mosaic(aes(weight=Freq, x=product(Age,Sex) ,fill=Survived
+                   ,colour=Survived))
+```
+
+##          *¡MUCHAS GRACIAS!*
 
 
