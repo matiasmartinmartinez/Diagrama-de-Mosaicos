@@ -43,7 +43,7 @@ happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)
 ```
 
 
-## Notamos que la interpretacon varia en funcion de qué frecuencia usemos.
+## Notamos que la interpretación varia en funcion de qué frecuencia usemos.
 
 Entonces, utilizar frecuencias relativas nos generaba tranquilidad de momento. Simplemente utilizábamos el gráfico de barras fraccionado por frecuencias relativas (con un 100% para cada barra) y la comparación eras más acorde.
  
