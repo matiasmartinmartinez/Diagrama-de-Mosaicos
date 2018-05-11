@@ -68,7 +68,7 @@ Obsérvese como con una simple modificación podemos solucionar este inconvenien
 
 
 ## 
-Esta modificación es implementada en el denominado **diagrama de mosaicos** y consiste en representar gráficamente una tabla bidimensional o multidimensional para variables cualitativas.
+Esta modificación es implementada en el denominado **diagrama de mosaicos** y consiste en un resumen gráfico de las distribuciones condicionales en una tabla bidimensional o multidimensional para variables cualitativas.
 
 ```{r,message=FALSE}
 library("ggmosaic")
@@ -138,7 +138,7 @@ data %>% ggplot() + geom_mosaic(aes( weight=Freq, x=product(Survived,Class),colo
 
 No es necesario darle las frecuencias relativas, con **weight** = contador (frecuencias absolutas) es suficiente.
 
-Usamos product(y,x). Permite generar una **lista** dentro de nuestra *x*.
+Usamos product(y,x). Permite generar una **lista de vectores** dentro de nuestra *x*, ya que geom_mosaic no posee un *Y*.
 
 
 
