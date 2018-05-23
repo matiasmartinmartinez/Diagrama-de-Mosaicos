@@ -158,8 +158,8 @@ ggplot(data) +
 ##
 
 ```{r,echo=TRUE}
- ggplot(data) + 
- geom_mosaic(aes(weight=Freq, x=product(Age,Survived,Sex) ,fill=Survived))
+ggplot(data) + 
+geom_mosaic(aes(weight=Freq, x=product(Survived,Sex,Age) ,fill=Sex))
 ```
 
 ##  
