@@ -136,10 +136,10 @@ data
 ```
 ##
 
-data  %>%  ggplot()  +  geom_mosaic ( aes ( **weight**=Freq,  x=**product(Survived,Class)**,color=Survived,fill=Survived))
+data  %>%  ggplot()  +  geom_mosaic ( aes ( **weight**=Freq,  x=**product(Survived,Class)**,fill=Survived,color=Survived))
 
 ```{r,echo=FALSE}
-data %>% ggplot() + geom_mosaic(aes( weight=Freq, x=product(Class),color=Survived,fill=Survived))
+data %>% ggplot() + geom_mosaic(aes( weight=Freq, x=product(Class),fill=Survived,color=Survived))
 ```
 
 ##
