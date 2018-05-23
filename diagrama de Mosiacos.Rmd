@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Conocimientos previos
 
 
-En clases anteriores observamos el gráfico de barras fraccionado por una variable de interés. Al profundizar, apreciamos que es de mayor beneficio una visualización que utiliza frecuencias relativas en constraste de una con frecuencias absolutas.
+En clases anteriores observamos el gráfico de barras fraccionado o apiladas por una variable de interés. Al profundizar, apreciamos que es de mayor beneficio una visualización que utiliza frecuencias relativas en constraste de una con frecuencias absolutas.
 
 ```{r,echo=FALSE,message=FALSE}
 library(tidyverse)
@@ -25,7 +25,7 @@ library("productplots")
 happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)%>% group_by(marital,happy) %>% summarise(cont=n()) %>% drop_na() %>%
      ggplot( aes( x=marital, y=cont,colour= happy, fill=happy)) + 
   geom_bar(stat="identity") +
-  labs( x="Estado civil", y ="Porcentaje", title="Gráfico de mosaicos: Porcentaje niveles de felicidad según estado civil") +
+  labs( x="Estado civil", y ="Cantidad", title="Gráfico de barras apiladas de estado civil según nivel de felicidad") +
   theme_minimal( base_size=11) +
   theme( plot.title = element_text( hjust = 0.5, colour="darkslategrey", size=13.7, face="plain")) +
   scale_fill_manual( values=c("firebrick3","seagreen3","royalblue4"))
@@ -36,18 +36,17 @@ happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)
 happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)%>% group_by(marital,happy) %>% summarise(cont=n()) %>% drop_na() %>%
      ggplot( aes( x=marital, y=cont,colour= happy, fill=happy)) + 
   geom_bar(stat="identity",position ="fill") +
-  labs( x="Estado civil", y ="Porcentaje", title="Gráfico de mosaicos: Porcentaje niveles de felicidad según estado civil") +
+  labs( x="Estado civil", y ="Porcentaje", title=" Gráfico de barras apiladas de estado civil según nivel de felicidad niveles de felicidad según estado civil") +
   theme_minimal( base_size=11) +
   theme( plot.title = element_text( hjust = 0.5, colour="darkslategrey", size=13.7, face="plain")) +
   scale_fill_manual( values=c("firebrick3","seagreen3","royalblue4"))
 ```
 
+## Notamos que la interpretación varía en función de qué frecuencia usemos.
 
-## Notamos que la interpretación varia en funcion de qué frecuencia usemos.
-
-Entonces, utilizar frecuencias relativas nos generaba tranquilidad de momento. Simplemente utilizábamos el gráfico de barras fraccionado por frecuencias relativas (con un 100% para cada barra) y la comparación eras más acorde.
+Entonces, utilizar frecuencias relativas nos generaba tranquilidad de momento. Simplemente utilizábamos el gráfico de barras fraccionado por frecuencias relativas (con un 100% para cada barra) y la comparación es más sencilla.
  
-Pero se nos plantea una problemática: pese a que esta visualización nos muestra claramente la distribución de nuestra variable **y** (por ejemplo los niveles de felicidad), asume que todos los niveles de nuestra variable **x** poseen la misma cantidad de observaciones.
+Pero se nos plantea una problemática: pese a que esta visualización nos muestra claramente la distribución de nuestra variable **y** (por ejemplo los niveles de felicidad), asume que todos los niveles de nuestra variable **x** poseen la misma cantidad de observaciones, o no hay información sobre el tamaño muestral en dicho gráfico.
 
 
 ##Inusual 
@@ -62,16 +61,32 @@ happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)
 
 ##Nuestro gráfico no expresa esta diferencia. 
 
-Por lo cual sería necesario representar visualmente cuantas observaciones toman los casados, los solteros, etc. O sea, necesitamos **"algo"** que nos muestre las diferencias en las observaciones para cada nivel de *x*.
+Por lo cual sería necesario representar visualmente cuantas observaciones toman los casados, los solteros, etc. O sea, necesitamos una visualización que nos muestre la información del número de observaciones para cada nivel de *x*.
 
 Obsérvese como con una simple modificación podemos solucionar este inconveniente: representando en el ancho de las barras la frecuencia relativa de observaciones para cada nivel.
 
 
-## 
+## Gráfico de mosaico
 Esta modificación es implementada en el denominado **diagrama de mosaicos** y consiste en un resumen gráfico de las distribuciones condicionales en una tabla bidimensional o multidimensional para variables cualitativas.
+
+Un mosaico es el análogo gráfico de una tabla de contingencias multivariada.
 
 ```{r,message=FALSE}
 library("ggmosaic")
+```
+
+## Tabla de contingencia
+
+```{r}
+# happy%>%   
+#   drop_na()%>%
+#   group_by(marital, happy)%>%
+#   summarise(n=n())%>%
+#   spread(happy, n)%>%
+#   kable()
+library(gmodels)
+with(happy, CrossTable(marital, happy,max.width = 2,prop.r=FALSE,prop.c = FALSE,prop.chisq = FALSE,prop.t = FALSE))
+
 ```
 
 ```{r,echo = FALSE}
@@ -85,6 +100,8 @@ happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)
   guides( fill=guide_legend( title="Felicidad")) +
   scale_fill_manual( values=c("firebrick3","seagreen3","royalblue4"))
 ```
+
+
 
 ##
 Nótese que cierta disposición nos resulta familiar: 
