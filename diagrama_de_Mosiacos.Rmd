@@ -92,7 +92,18 @@ happy %>% filter(!is.na(happy)) %>% group_by(happy,marital) %>% arrange(marital)
 
 ## Nótese que cierta disposición nos resulta familiar: 
 Un mosaico es el análogo gráfico de una tabla de contingencias multivariada.
+<style type="text/css">
 
+body{ /* Normal  */
+   font-size: 14px;
+}
+code.r{ /* Code block */
+  font-size: 4px;
+}
+pre {
+  font-size: 14px
+}
+</style>
 ```{r,echo=F}
 library(gmodels)
 with(happy, CrossTable(marital, happy,max.width = 2,prop.r=FALSE,prop.c = FALSE,prop.chisq = FALSE,prop.t = T))
