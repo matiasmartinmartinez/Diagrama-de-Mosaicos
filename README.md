@@ -1,4 +1,8 @@
-<img src="https://cloud.githubusercontent.com/assets/73663/20457773/76543fcc-ae60-11e6-8ac2-c5db1406502e.png" width="64" height="44" />
+<img src="https://www.rstudio.com/wp-content/uploads/2014/04/ggplot2.png" width="44" height="44" />
+
+
+
+
 
 **Resumen:**
 
